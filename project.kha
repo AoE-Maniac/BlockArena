@@ -2,9 +2,9 @@
 	"format": 1,
 	"game":
 	{
-		"name": "Empty",
-		"width": 640,
-		"height": 480
+		"name": "BlockArena",
+		"width": 800,
+		"height": 600
 	},
 	"assets":
 	[
