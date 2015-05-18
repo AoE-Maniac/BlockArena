@@ -3,8 +3,10 @@ package;
 import kha.Color;
 import kha.Configuration;
 import kha.Font;
+import kha.FontStyle;
 import kha.Framebuffer;
 import kha.Game;
+import kha.Loader;
 import kha.networking.Session;
 
 class BlockArena extends Game {
@@ -17,13 +19,18 @@ class BlockArena extends Game {
 	}
 	
 	override public function init(): Void {
-		session = new Session(2);
-		session.waitForStart(startGame);
 		Configuration.setScreen(this);
 		waiting = true;
+		Loader.the.loadRoom("all", startGame);
 	}
 	
 	private function startGame(): Void {
+		font = Loader.the.loadFont("Arial", new FontStyle(false, false, false), 20);
+		session = new Session(2);
+		session.waitForStart(startSession);
+	}
+	
+	private function startSession(): Void {
 		waiting = false;
 		/*
 		Jumpman.get(1).__id = id++;
@@ -74,9 +81,12 @@ class BlockArena extends Game {
 			var g = frame.g2;
 			g.begin();
 			g.clear(Color.Black);
-			g.color = Color.White;
-			var text = "Waiting";
-			g.drawString(text, width / 2 - font.stringWidth(text) / 2, height / 2 - font.getHeight() / 2);
+			if (font != null) {
+				g.color = Color.White;
+				g.font = font;
+				var text = "Waiting";
+				g.drawString(text, width / 2 - font.stringWidth(text) / 2, height / 2 - font.getHeight() / 2);
+			}
 			g.end();
 			return;
 		}

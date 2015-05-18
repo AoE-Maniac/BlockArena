@@ -8,10 +8,24 @@
 	},
 	"assets":
 	[
-
+		{
+			"id": "c33da2d0-fcee-11e4-b939-0800200c9a66",
+			"type": "blob",
+			"file": "Arial20.kravur",
+			"name": "Arial20.kravur"
+		}
 	],
 	"rooms":
 	[
-
+		{
+			"id" : "cefdc0f0-fcee-11e4-b939-0800200c9a66",
+			"name": "all",
+			"parent": null,
+			"neighbours": [],
+			"assets":
+			[
+				"c33da2d0-fcee-11e4-b939-0800200c9a66"
+			]
+		}
 	]
 }
