@@ -8,11 +8,14 @@ import kha.Framebuffer;
 import kha.Game;
 import kha.Loader;
 import kha.networking.Session;
+import kha.Scheduler;
 
 class BlockArena extends Game {
 	private var session: Session;
 	private var waiting: Bool;
 	private var font: Font;
+	
+	private var blocks: Array<Block> = new Array();
 	
 	public function new() {
 		super("BlockArena");
@@ -32,6 +35,18 @@ class BlockArena extends Game {
 	
 	private function startSession(): Void {
 		waiting = false;
+		
+		var block = new Block();
+		block.__id = 0;
+		block.x = 100;
+		block.y = 100;
+		
+		session.addEntity(block);
+		blocks.push(block);
+		
+		
+		Scheduler.addTimeTask(updateBlocks, 0, 1 / 60);
+		
 		/*
 		Jumpman.get(1).__id = id++;
 		//Session.the().addEntity(Jumpman.get(0));
@@ -76,6 +91,17 @@ class BlockArena extends Game {
 		*/
 	}
 	
+	private function updateBlocks(): Void {
+		for (block in blocks) {
+			block.sx += block.ax;
+			block.sy += block.ay;
+			if (block.sy > 5) block.sy = 5;
+			block.x += block.sx;
+			block.y += block.sy;
+			if (block.y > height) block.y -= height + 100;
+		}
+	}
+	
 	override public function render(frame: Framebuffer): Void {
 		if (waiting) {
 			var g = frame.g2;
@@ -93,8 +119,9 @@ class BlockArena extends Game {
 		
 		var g = frame.g2;
 		g.begin();
-		g.color = Color.Orange;
-		g.fillRect(100, 100, 200, 200);
+		for (block in blocks) {
+			block.render(g);
+		}
 		g.end();
 	}
 }
