@@ -6,6 +6,8 @@ import kha.Font;
 import kha.FontStyle;
 import kha.Framebuffer;
 import kha.Game;
+import kha.input.Keyboard;
+import kha.Key;
 import kha.Loader;
 import kha.networking.Session;
 import kha.Scheduler;
@@ -44,6 +46,31 @@ class BlockArena extends Game {
 		
 		session.addEntity(block);
 		blocks.push(block);
+		
+		session.addController(Keyboard.get());
+		
+		Keyboard.get().notify(
+			function (key: Key, char: String) {
+				if (waiting) return;
+				switch (key) {
+				case LEFT:
+					block.sx = -2;
+				case RIGHT:
+					block.sx = 2;
+				default:
+				}
+			},
+			function (key: Key, char: String) {
+				if (waiting) return;
+				switch (key) {
+				case LEFT:
+					block.sx = 0;
+				case RIGHT:
+					block.sx = 0;
+				default:
+				}	
+			}
+		);
 			
 		Scheduler.addTimeTask(updateBlocks, 0, 1 / 60);
 		
