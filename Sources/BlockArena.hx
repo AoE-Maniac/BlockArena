@@ -31,6 +31,7 @@ class BlockArena extends Game {
 		font = Loader.the.loadFont("Arial", new FontStyle(false, false, false), 20);
 		session = new Session(2);
 		session.waitForStart(startSession);
+		//startSession();
 	}
 	
 	private function startSession(): Void {
@@ -43,8 +44,7 @@ class BlockArena extends Game {
 		
 		session.addEntity(block);
 		blocks.push(block);
-		
-		
+			
 		Scheduler.addTimeTask(updateBlocks, 0, 1 / 60);
 		
 		/*
@@ -119,6 +119,9 @@ class BlockArena extends Game {
 		
 		var g = frame.g2;
 		g.begin();
+		g.color = Color.White;
+		g.font = font;
+		g.drawString("" + Scheduler.time(), 10, 10);
 		for (block in blocks) {
 			block.render(g);
 		}
