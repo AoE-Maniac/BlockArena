@@ -43,6 +43,14 @@ class BlockArena extends Game {
 		block.__id = 0;
 		block.x = 100;
 		block.y = 100;
+
+		session.addEntity(block);
+		blocks.push(block);
+
+		block = new Block();
+		block.__id = 1;
+		block.x = 500;
+		block.y = 100;
 		
 		session.addEntity(block);
 		blocks.push(block);
@@ -54,9 +62,9 @@ class BlockArena extends Game {
 				if (waiting) return;
 				switch (key) {
 				case LEFT:
-					block.sx = -2;
+					blocks[session.me.id].sx = -2;
 				case RIGHT:
-					block.sx = 2;
+					blocks[session.me.id].sx = 2;
 				default:
 				}
 			},
@@ -64,9 +72,9 @@ class BlockArena extends Game {
 				if (waiting) return;
 				switch (key) {
 				case LEFT:
-					block.sx = 0;
+					blocks[session.me.id].sx = 0;
 				case RIGHT:
-					block.sx = 0;
+					blocks[session.me.id].sx = 0;
 				default:
 				}	
 			}
