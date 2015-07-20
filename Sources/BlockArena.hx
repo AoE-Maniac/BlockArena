@@ -9,7 +9,7 @@ import kha.Game;
 import kha.input.Keyboard;
 import kha.Key;
 import kha.Loader;
-import kha.networking.Session;
+import kha.network.Session;
 import kha.Scheduler;
 
 class BlockArena extends Game {

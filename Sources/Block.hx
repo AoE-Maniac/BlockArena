@@ -2,7 +2,7 @@ package;
 
 import kha.Color;
 import kha.graphics2.Graphics;
-import kha.networking.Entity;
+import kha.network.Entity;
 
 class Block implements Entity {
 	@replicated

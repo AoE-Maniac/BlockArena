@@ -1,30 +1,24 @@
 {
-	"format": 1,
-	"game":
-	{
+	"format": 2,
+	"game": {
 		"name": "BlockArena",
 		"width": 800,
 		"height": 600
 	},
-	"assets":
-	[
+	"assets": [
 		{
-			"id": "c33da2d0-fcee-11e4-b939-0800200c9a66",
 			"type": "blob",
 			"file": "Arial20.kravur",
 			"name": "Arial20.kravur"
 		}
 	],
-	"rooms":
-	[
+	"rooms": [
 		{
-			"id" : "cefdc0f0-fcee-11e4-b939-0800200c9a66",
 			"name": "all",
 			"parent": null,
 			"neighbours": [],
-			"assets":
-			[
-				"c33da2d0-fcee-11e4-b939-0800200c9a66"
+			"assets": [
+				"Arial20.kravur"
 			]
 		}
 	]
