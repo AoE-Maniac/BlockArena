@@ -27,7 +27,7 @@ class BlockArena {
 		System.notifyOnRender(render);
 		Scheduler.addTimeTask(update, 0, 1 / 60);
     
-		session = new Session(2);
+		session = new Session(2, "localhost", 6789);
 		session.waitForStart(startSession);
 	}
 	
