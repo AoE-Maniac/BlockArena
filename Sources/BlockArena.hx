@@ -35,7 +35,6 @@ class BlockArena {
 		waiting = false;
 		
 		var block = new Block();
-		block.__id = 0;
 		block.x = 100;
 		block.y = 100;
 
@@ -43,7 +42,6 @@ class BlockArena {
 		blocks.push(block);
 
 		block = new Block();
-		block.__id = 1;
 		block.x = 500;
 		block.y = 100;
 		
