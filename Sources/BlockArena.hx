@@ -1,18 +1,16 @@
 package;
 
+import kha.Assets;
 import kha.Color;
-import kha.Configuration;
 import kha.Font;
-import kha.FontStyle;
 import kha.Framebuffer;
-import kha.Game;
 import kha.input.Keyboard;
 import kha.Key;
-import kha.Loader;
 import kha.network.Session;
 import kha.Scheduler;
+import kha.System;
 
-class BlockArena extends Game {
+class BlockArena {
 	private var session: Session;
 	private var waiting: Bool;
 	private var font: Font;
@@ -20,20 +18,17 @@ class BlockArena extends Game {
 	private var blocks: Array<Block> = new Array();
 	
 	public function new() {
-		super("BlockArena");
-	}
-	
-	override public function init(): Void {
-		Configuration.setScreen(this);
 		waiting = true;
-		Loader.the.loadRoom("all", startGame);
+		Assets.loadEverything(onLoaded);
 	}
 	
-	private function startGame(): Void {
-		font = Loader.the.loadFont("Arial", new FontStyle(false, false, false), 20);
+	private function onLoaded(): Void {
+		font = Assets.fonts.DejaVuSansMono;
+		System.notifyOnRender(render);
+		Scheduler.addTimeTask(update, 0, 1 / 60);
+    
 		session = new Session(2);
 		session.waitForStart(startSession);
-		//startSession();
 	}
 	
 	private function startSession(): Void {
@@ -79,65 +74,20 @@ class BlockArena extends Game {
 				}	
 			}
 		);
-			
-		Scheduler.addTimeTask(updateBlocks, 0, 1 / 60);
-		
-		/*
-		Jumpman.get(1).__id = id++;
-		//Session.the().addEntity(Jumpman.get(0));
-		//Session.the().addEntity(Jumpman.get(1));
-		Scene.the.addHero(Jumpman.get(0));
-		Scene.the.addHero(Jumpman.get(1));
-		
-		session.addController(Keyboard.get());
-		
-		Keyboard.get().notify(
-			function (key: Key, char: String) {
-				switch (mode) {
-				case Game:
-					switch (key) {
-					case UP:
-						Jumpman.get(session.me.id).setUp();
-					case LEFT:
-						Jumpman.get(session.me.id).left = true;
-					case RIGHT:
-						Jumpman.get(session.me.id).right = true;
-					default:
-					}
-				default:
-				}
-			},
-			function (key: Key, char: String) {
-				switch (mode) {
-				case Game:
-					switch (key) {
-					case UP:
-						Jumpman.get(session.me.id).up = false;
-					case LEFT:
-						Jumpman.get(session.me.id).left = false;
-					case RIGHT:
-						Jumpman.get(session.me.id).right = false;
-					default:
-					}	
-				default:
-				}
-			}
-		);
-		*/
 	}
 	
-	private function updateBlocks(): Void {
+	private function update(): Void {
 		for (block in blocks) {
 			block.sx += block.ax;
 			block.sy += block.ay;
 			if (block.sy > 5) block.sy = 5;
 			block.x += block.sx;
 			block.y += block.sy;
-			if (block.y > height) block.y -= height + 100;
+			if (block.y > System.windowHeight()) block.y -= System.windowHeight() + 100;
 		}
 	}
 	
-	override public function render(frame: Framebuffer): Void {
+	public function render(frame: Framebuffer): Void {
 		if (waiting) {
 			var g = frame.g2;
 			g.begin();
@@ -145,8 +95,9 @@ class BlockArena extends Game {
 			if (font != null) {
 				g.color = Color.White;
 				g.font = font;
+				g.fontSize = 20;
 				var text = "Waiting";
-				g.drawString(text, width / 2 - font.stringWidth(text) / 2, height / 2 - font.getHeight() / 2);
+				g.drawString(text, System.windowWidth() / 2 - font.width(g.fontSize, text) / 2, System.windowHeight() / 2 - font.height(g.fontSize) / 2);
 			}
 			g.end();
 			return;

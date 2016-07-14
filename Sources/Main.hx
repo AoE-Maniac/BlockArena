@@ -1,10 +1,11 @@
 package;
 
-import kha.Starter;
+import kha.System;
 
 class Main {
 	public static function main() {
-		var starter = new Starter();
-		starter.start(new BlockArena());
+		System.init({title: "BlockArena", width: 800, height: 600}, function() {
+			new BlockArena();
+		});
 	}
 }
