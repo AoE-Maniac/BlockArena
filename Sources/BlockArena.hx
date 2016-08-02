@@ -105,7 +105,9 @@ class BlockArena {
 		g.begin();
 		g.color = Color.White;
 		g.font = font;
+		g.fontSize = 20;
 		g.drawString("" + Scheduler.time(), 10, 10);
+		g.drawString("Ping: " + Std.int(session.ping * 1000), 10, 35);
 		for (block in blocks) {
 			block.render(g);
 		}
