@@ -27,29 +27,29 @@ class BlockArena {
 		System.notifyOnRender(render);
 		Scheduler.addTimeTask(update, 0, 1 / 60);
     
-		session = new Session(2, "localhost", 6789);
+		// Initialize the network session
+		// Note: If you do not want to use a hardcoded server address ask the user beforehand
+		var serverAddress = "localhost";
+		session = new Session(2, serverAddress, 6789);
+
+		// Wait for enough players to connect
 		session.waitForStart(startSession);
 	}
 	
 	private function startSession(): Void {
 		waiting = false;
 		
-		var block = new Block();
-		block.x = 100;
-		block.y = 100;
-
-		session.addEntity(block);
+		// Create game objects and add them to the session
+		var block = new Block(100, 100);
 		blocks.push(block);
-
-		block = new Block();
-		block.x = 500;
-		block.y = 100;
-		
 		session.addEntity(block);
+
+		block = new Block(500, 100);
 		blocks.push(block);
+		session.addEntity(block);
 		
-		session.addController(Keyboard.get());
-		
+		// Define controls and add input device to the session
+		// Note: Use session.me.id to identify the local player
 		Keyboard.get().notify(
 			function (key: Key, char: String) {
 				if (waiting) return;
@@ -72,6 +72,7 @@ class BlockArena {
 				}	
 			}
 		);
+		session.addController(Keyboard.get());
 	}
 	
 	private function update(): Void {
@@ -85,31 +86,30 @@ class BlockArena {
 	}
 	
 	public function render(frame: Framebuffer): Void {
-		if (waiting) {
-			var g = frame.g2;
-			g.begin();
-			g.clear(Color.Black);
-			if (font != null) {
-				g.color = Color.White;
-				g.font = font;
-				g.fontSize = 20;
-				var text = "Waiting";
-				g.drawString(text, System.windowWidth() / 2 - font.width(g.fontSize, text) / 2, System.windowHeight() / 2 - font.height(g.fontSize) / 2);
-			}
-			g.end();
-			return;
-		}
-		
 		var g = frame.g2;
-		g.begin();
-		g.color = Color.White;
-		g.font = font;
-		g.fontSize = 20;
-		g.drawString("" + Scheduler.time(), 10, 10);
-		g.drawString("Ping: " + Std.int(session.ping * 1000), 10, 35);
-		for (block in blocks) {
-			block.render(g);
+		g.begin(true, Color.Black);
+
+		if (waiting) {
+			g.color = Color.White;
+			g.font = font;
+			g.fontSize = 20;
+
+			var text = "Waiting";
+			g.drawString(text, System.windowWidth() / 2 - font.width(g.fontSize, text) / 2, System.windowHeight() / 2 - font.height(g.fontSize) / 2);
 		}
+		else {
+			g.color = Color.White;
+			g.font = font;
+			g.fontSize = 20;
+
+			g.drawString("" + Scheduler.time(), 10, 10);
+			g.drawString("Ping: " + Std.int(session.ping * 1000), 10, 35);
+			
+			for (block in blocks) {
+				block.render(g);
+			}
+		}
+
 		g.end();
 	}
 }
