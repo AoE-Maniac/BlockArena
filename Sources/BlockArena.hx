@@ -55,9 +55,9 @@ class BlockArena {
 				if (waiting) return;
 				switch (key) {
 				case LEFT:
-					blocks[session.me.id].sx = -2;
+					blocks[session.me.id].left = 2;
 				case RIGHT:
-					blocks[session.me.id].sx = 2;
+					blocks[session.me.id].right = 2;
 				default:
 				}
 			},
@@ -65,9 +65,9 @@ class BlockArena {
 				if (waiting) return;
 				switch (key) {
 				case LEFT:
-					blocks[session.me.id].sx = 0;
+					blocks[session.me.id].left = 0;
 				case RIGHT:
-					blocks[session.me.id].sx = 0;
+					blocks[session.me.id].right = 0;
 				default:
 				}	
 			}
@@ -76,9 +76,8 @@ class BlockArena {
 	
 	private function update(): Void {
 		for (block in blocks) {
-			block.sx += block.ax;
-			block.sy += block.ay;
-			if (block.sy > 5) block.sy = 5;
+			block.sx = block.right - block.left;
+			block.sy = 7.5;
 			block.x += block.sx;
 			block.y += block.sy;
 			if (block.y > System.windowHeight()) block.y -= System.windowHeight() + 100;

@@ -14,14 +14,9 @@ class Block implements Entity {
 	@replicated
 	public var sy: Float = 0;
 	@replicated
-	public var ax: Float = 0;
+	public var left: Float = 0;
 	@replicated
-	public var ay: Float = 1;
-	
-	//@replicated
-	//public var left: Bool = false;
-	//@replicated
-	//public var right: Bool = false;
+	public var right: Float = 0;
 	
 	private var w: Float = 100;
 	private var h: Float = 100;
