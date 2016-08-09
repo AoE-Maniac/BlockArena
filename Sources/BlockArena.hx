@@ -5,6 +5,7 @@ import kha.Color;
 import kha.Font;
 import kha.Framebuffer;
 import kha.input.Keyboard;
+import kha.input.Mouse;
 import kha.Key;
 import kha.network.Session;
 import kha.Scheduler;
@@ -48,7 +49,7 @@ class BlockArena {
 		blocks.push(block);
 		session.addEntity(block);
 		
-		// Define controls and add input device to the session
+		// Define controls and add input device to the session to have it synched to the server
 		// Note: Use session.me.id to identify the local player
 		Keyboard.get().notify(
 			function (key: Key, char: String) {
@@ -73,6 +74,15 @@ class BlockArena {
 			}
 		);
 		session.addController(Keyboard.get());
+
+		Mouse.get().notify(
+			function (button: Int, x: Int, y: Int) {
+				if (waiting) return;
+				if (button == 0) {
+					blocks[session.me.id].flipColor();
+					Block.flop();
+				}	
+			}, null, null, null);
 	}
 	
 	private function update(): Void {
