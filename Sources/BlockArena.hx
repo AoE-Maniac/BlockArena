@@ -132,6 +132,15 @@ class BlockArena {
 
 			g.drawString("" + Scheduler.time(), 10, 10);
 			g.drawString("Ping: " + Std.int(session.ping * 1000), 10, 35);
+			g.drawString("Players: " + Session.the().currentPlayers + "/" + Session.the().maxPlayers, 10, 60);
+		}
+		else {
+			g.color = Color.White;
+			g.font = font;
+			g.fontSize = 20;
+
+			var text = Session.the().currentPlayers + "/" + Session.the().maxPlayers + " players connected";
+			g.drawString(text, System.windowWidth() / 2 - font.width(g.fontSize, text) / 2, System.windowHeight() / 2 + font.height(g.fontSize) / 2);
 		}
 
 		if (message != "") {
