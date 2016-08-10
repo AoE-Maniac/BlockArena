@@ -36,7 +36,7 @@ class BlockArena {
 
 		// Wait for enough players to connect
 		message = "[Waiting for more clients]";
-		session.waitForStart(startSession, onSessionRefused, onSessionError, onSessionClosed);
+		session.waitForStart(startSession, onSessionRefused, onSessionError, onSessionClosed, resetSession);
 	}
 	
 	private function startSession(): Void {
@@ -86,6 +86,13 @@ class BlockArena {
 					Block.flop();
 				}	
 			}, null, null, null);
+	}
+	
+	private function resetSession(): Void {
+		blocks = new Array();
+		
+		Keyboard.get().notify(null, null);
+		Mouse.get().notify(null, null, null, null);
 	}
 
 	private function onSessionRefused(): Void {
