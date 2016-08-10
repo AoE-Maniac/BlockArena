@@ -16,6 +16,7 @@ class BlockArena {
 	private var waiting: Bool;
 	private var font: Font;
 	
+	private var message: String = "";
 	private var blocks: Array<Block> = new Array();
 	
 	public function new() {
@@ -34,7 +35,7 @@ class BlockArena {
 		session = new Session(2, serverAddress, 6789);
 
 		// Wait for enough players to connect
-		session.waitForStart(startSession);
+		session.waitForStart(startSession, onSessionError, onSessionClosed);
 	}
 	
 	private function startSession(): Void {
@@ -84,6 +85,14 @@ class BlockArena {
 				}	
 			}, null, null, null);
 	}
+
+	private function onSessionError(): Void {
+		message = "[Network error]";
+	}
+
+	private function onSessionClosed(): Void {
+		message = "[Server shut down]";
+	}
 	
 	private function update(): Void {
 		for (block in blocks) {
@@ -118,6 +127,12 @@ class BlockArena {
 			for (block in blocks) {
 				block.render(g);
 			}
+
+			g.color = Color.White;
+			g.font = font;
+			g.fontSize = 20;
+			var text = message;
+			g.drawString(text, System.windowWidth() / 2 - font.width(g.fontSize, text) / 2, System.windowHeight() / 2 - font.height(g.fontSize) / 2);
 		}
 
 		g.end();
