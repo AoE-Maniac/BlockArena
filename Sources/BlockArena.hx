@@ -35,11 +35,13 @@ class BlockArena {
 		session = new Session(2, serverAddress, 6789);
 
 		// Wait for enough players to connect
-		session.waitForStart(startSession, onSessionError, onSessionClosed);
+		message = "[Waiting for more clients]";
+		session.waitForStart(startSession, onSessionRefused, onSessionError, onSessionClosed);
 	}
 	
 	private function startSession(): Void {
 		waiting = false;
+		message = "";
 		
 		// Create game objects and add them to the session
 		var block = new Block(100, 100);
@@ -86,6 +88,10 @@ class BlockArena {
 			}, null, null, null);
 	}
 
+	private function onSessionRefused(): Void {
+		message = "[Server refused connection]";
+	}
+
 	private function onSessionError(): Void {
 		message = "[Network error]";
 	}
@@ -108,22 +114,7 @@ class BlockArena {
 		var g = frame.g2;
 		g.begin(true, Color.Black);
 
-		if (waiting) {
-			g.color = Color.White;
-			g.font = font;
-			g.fontSize = 20;
-
-			var text = "Waiting";
-			g.drawString(text, System.windowWidth() / 2 - font.width(g.fontSize, text) / 2, System.windowHeight() / 2 - font.height(g.fontSize) / 2);
-		}
-		else {
-			g.color = Color.White;
-			g.font = font;
-			g.fontSize = 20;
-
-			g.drawString("" + Scheduler.time(), 10, 10);
-			g.drawString("Ping: " + Std.int(session.ping * 1000), 10, 35);
-			
+		if (!waiting) {
 			for (block in blocks) {
 				block.render(g);
 			}
@@ -131,6 +122,16 @@ class BlockArena {
 			g.color = Color.White;
 			g.font = font;
 			g.fontSize = 20;
+
+			g.drawString("" + Scheduler.time(), 10, 10);
+			g.drawString("Ping: " + Std.int(session.ping * 1000), 10, 35);
+		}
+
+		if (message != "") {
+			g.color = Color.White;
+			g.font = font;
+			g.fontSize = 20;
+
 			var text = message;
 			g.drawString(text, System.windowWidth() / 2 - font.width(g.fontSize, text) / 2, System.windowHeight() / 2 - font.height(g.fontSize) / 2);
 		}
