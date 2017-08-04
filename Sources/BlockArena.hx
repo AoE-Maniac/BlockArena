@@ -6,7 +6,7 @@ import kha.Font;
 import kha.Framebuffer;
 import kha.input.Keyboard;
 import kha.input.Mouse;
-import kha.Key;
+import kha.input.KeyCode;
 import kha.network.Session;
 import kha.Scheduler;
 import kha.System;
@@ -31,7 +31,8 @@ class BlockArena {
     
 		// Initialize the network session
 		// Note: If you do not want to use a hardcoded server address ask the user beforehand
-		var serverAddress = "localhost";
+		//var serverAddress = "localhost";
+		var serverAddress = "127.0.0.1";
 		session = new Session(2, serverAddress, 6789);
 
 		// Wait for enough players to connect
@@ -55,22 +56,22 @@ class BlockArena {
 		// Define controls and add input device to the session to have it synched to the server
 		// Note: Use session.me.id to identify the local player
 		Keyboard.get().notify(
-			function (key: Key, char: String) {
+			function (key: Int) {
 				if (waiting) return;
 				switch (key) {
-				case LEFT:
+				case KeyCode.Left:
 					blocks[session.me.id].left = 2;
-				case RIGHT:
+				case KeyCode.Right:
 					blocks[session.me.id].right = 2;
 				default:
 				}
 			},
-			function (key: Key, char: String) {
+			function (key: Int) {
 				if (waiting) return;
 				switch (key) {
-				case LEFT:
+				case KeyCode.Left:
 					blocks[session.me.id].left = 0;
-				case RIGHT:
+				case KeyCode.Right:
 					blocks[session.me.id].right = 0;
 				default:
 				}	
