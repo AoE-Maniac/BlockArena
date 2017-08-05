@@ -6,7 +6,7 @@ import kha.Font;
 import kha.Framebuffer;
 import kha.input.Keyboard;
 import kha.input.Mouse;
-import kha.Key;
+import kha.input.KeyCode;
 import kha.network.Session;
 import kha.Scheduler;
 import kha.System;
@@ -15,20 +15,20 @@ class BlockArena {
 	private var session: Session;
 	private var waiting: Bool;
 	private var font: Font;
-	
+
 	private var message: String = "";
 	private var blocks: Array<Block> = new Array();
-	
+
 	public function new() {
 		waiting = true;
 		Assets.loadEverything(onLoaded);
 	}
-	
+
 	private function onLoaded(): Void {
 		font = Assets.fonts.DejaVuSansMono;
 		System.notifyOnRender(render);
 		Scheduler.addTimeTask(update, 0, 1 / 60);
-    
+
 		// Initialize the network session
 		// Note: If you do not want to use a hardcoded server address ask the user beforehand
 		var serverAddress = "localhost";
@@ -38,11 +38,11 @@ class BlockArena {
 		message = "[Waiting for more clients]";
 		session.waitForStart(startSession, onSessionRefused, onSessionError, onSessionClosed, resetSession);
 	}
-	
+
 	private function startSession(): Void {
 		waiting = false;
 		message = "";
-		
+
 		// Create game objects and add them to the session
 		var block = new Block(100, 100);
 		blocks.push(block);
@@ -51,29 +51,29 @@ class BlockArena {
 		block = new Block(500, 100);
 		blocks.push(block);
 		session.addEntity(block);
-		
+
 		// Define controls and add input device to the session to have it synched to the server
 		// Note: Use session.me.id to identify the local player
 		Keyboard.get().notify(
-			function (key: Key, char: String) {
+			function (key: Int) {
 				if (waiting) return;
 				switch (key) {
-				case LEFT:
+				case KeyCode.Left:
 					blocks[session.me.id].left = 2;
-				case RIGHT:
+				case KeyCode.Right:
 					blocks[session.me.id].right = 2;
 				default:
 				}
 			},
-			function (key: Key, char: String) {
+			function (key: Int) {
 				if (waiting) return;
 				switch (key) {
-				case LEFT:
+				case KeyCode.Left:
 					blocks[session.me.id].left = 0;
-				case RIGHT:
+				case KeyCode.Right:
 					blocks[session.me.id].right = 0;
 				default:
-				}	
+				}
 			}
 		);
 		session.addController(Keyboard.get());
@@ -84,13 +84,13 @@ class BlockArena {
 				if (button == 0) {
 					blocks[session.me.id].flipColor();
 					Block.flop();
-				}	
+				}
 			}, null, null, null);
 	}
-	
+
 	private function resetSession(): Void {
 		blocks = new Array();
-		
+
 		Keyboard.get().notify(null, null);
 		Mouse.get().notify(null, null, null, null);
 	}
@@ -106,7 +106,7 @@ class BlockArena {
 	private function onSessionClosed(): Void {
 		message = "[Server shut down]";
 	}
-	
+
 	private function update(): Void {
 		for (block in blocks) {
 			block.sx = block.right - block.left;
@@ -116,7 +116,7 @@ class BlockArena {
 			if (block.y > System.windowHeight()) block.y -= System.windowHeight() + 100;
 		}
 	}
-	
+
 	public function render(frame: Framebuffer): Void {
 		var g = frame.g2;
 		g.begin(true, Color.Black);
